@@ -17,21 +17,25 @@ plt.ylabel('Feature 2')
 model = LogisticRegression()
 model.fit(X, y)
 
-# Get the coefficients of the logistic regression model
+# Extract the coefficients and intercept as scalars
 coef = model.coef_[0]
-intercept = model.intercept_
+intercept = model.intercept_[0]
 
-# Compute the slope and intercept of the line that separates the two classes
-x1 = X[:, 0].min()
-x2 = X[:, 0].max()
-y1 = -(intercept + coef[0] * x1) / coef[1]
-y2 = -(intercept + coef[0] * x2) / coef[1]
+# Calculate the slope and intercept of the decision boundary
+slope = -coef[0] / coef[1]
+intercept = -intercept / coef[1]
 
-# Add the dividing line to the plot
-plt.plot([x1, x2], [y1, y2], color='black')
+# Print the equation of the decision boundary
+eqn = f"Decision boundary: y = {slope:.2f}x + {intercept:.2f}"
+print(eqn)
 
+# Plot the decision boundary
+x_vals = np.array([X[:, 0].min(), X[:, 0].max()])
+y_vals = slope * x_vals + intercept
+plt.plot(x_vals, y_vals, '--', color='black')
+
+# Add the equation text to the plot
+plt.text(0.05, 1.1, eqn, transform=plt.gca().transAxes)
+
+# Show the plot
 plt.show()
-
-slope = -(intercept / coef[1])
-intercept = -(coef[0] / coef[1])
-print(f"Equation of line:  y = {slope}x{intercept}")
